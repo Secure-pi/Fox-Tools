@@ -1,0 +1,27 @@
+# Fichiers et dossiers de sauvegarde
+backups/
+backup-*.tar.gz
+
+# Fichiers de résultats d'outils
+*.kismet
+*.log
+*.cap
+*.csv
+*.xml
+*.json
+
+# Configurations locales
+.gemini_config
+*.env
+
+# Dépendances et caches Python
+__pycache__/
+venv/
+*.pyc
+
+# Dépendances Node.js
+node_modules/
+
+# Fichiers système
+.DS_Store
+Thumbs.db

