@@ -1,6 +1,6 @@
 # 🦊 Fox V2.0 - Ultimate Pentesting Toolkit
 
-Fox V2.0 est un framework en ligne de commande conçu pour simplifier et automatiser les différentes phases d'un test d'intrusion. Il agit comme un "copilote", en vous guidant à travers les menus et en lançant les outils de pentesting les plus courants de manière structurée.
+Fox V2.0 est un framework en ligne de commande, **optimisé pour les environnements légers comme le Raspberry Pi**, conçu pour simplifier et automatiser les différentes phases d'un test d'intrusion. Il agit comme un "copilote", en vous guidant à travers les menus et en lançant les outils de pentesting les plus courants de manière structurée.
 
 ## 🚀 Démarrage Rapide
 
