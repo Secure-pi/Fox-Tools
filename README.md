@@ -14,6 +14,24 @@ chmod +x scripts/fox.sh
 ./scripts/fox.sh
 ```
 
+## ⚙️ Installation (Recommandé)
+
+Pour une utilisation simplifiée, vous pouvez installer le script `fox` comme une commande globale sur votre système. Cela vous permettra de lancer le toolkit en tapant simplement `fox` depuis n'importe quel dossier.
+
+L'installateur va créer un raccourci dans `/usr/local/bin/fox`.
+
+```bash
+# Lancez le script d'installation
+./install.sh
+```
+
+Une fois l'installation terminée, vous pouvez simplement utiliser la commande `fox` :
+
+```bash
+# Lancez le toolkit de n'importe où
+fox
+```
+
 ## 🎯 Le Concept de "Projet"
 
 Au premier lancement, le script vous demandera de définir une **cible**. C'est le concept central du toolkit.
