@@ -38,8 +38,11 @@ EOF
 }
 
 check_updates() {
-    if check_tool "git" && [[ -d "${SCRIPT_DIR}/../.git" ]]; then
+    local project_dir="${SCRIPT_DIR}/../.."
+    if check_tool "git" && [[ -d "${project_dir}/.git" ]]; then
         echo -e "${BLUE}🔄 Vrification des mises  jour...${NC}"
+        local original_dir="$(pwd)"
+        cd "${project_dir}" || return
         git remote update >/dev/null 2>&1
         local status
         status=$(git status -uno)
@@ -49,11 +52,13 @@ check_updates() {
             if [[ "$update_choice" =~ ^[Yy]$ ]]; then
                 git pull
                 echo -e "${GREEN}✅ Mise  jour termine ! Veuillez relancer le script.${NC}"
+                cd "${original_dir}"
                 exit 0
             fi
         else
             echo -e "${GREEN}✅ Vous tes  jour.${NC}"
         fi
+        cd "${original_dir}"
     fi
 }
 
