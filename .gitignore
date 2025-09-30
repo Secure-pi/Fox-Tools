@@ -27,4 +27,5 @@ node_modules/
 Thumbs.db
 
 # Dossiers de projets générés localement
-projects/
+projects/*
+!projects/.gitkeep
