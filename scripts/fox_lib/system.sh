@@ -46,26 +46,54 @@ system_monitor() {
 update_all_tools() {
     clear
     show_fox
-    echo -e "${BLUE}${BOLD}🔄 UPDATE ALL TOOLS${NC}"
+    echo -e "${BLUE}${BOLD}🔄 MISE À JOUR DES OUTILS${NC}"
     echo "=================================================="
+
+    # Vérification des privilèges sudo
+    if ! command -v sudo &> /dev/null; then
+        echo -e "${RED}❌ 'sudo' n'est pas installé. Impossible de mettre à jour les paquets système.${NC}"
+        sleep 2
+    elif ! sudo -n true 2>/dev/null; then
+        echo -e "${YELLOW}⚠️ Vous n'avez pas de session sudo active. Les mises à jour APT pourraient demander votre mot de passe.${NC}"
+        sleep 2
+    fi
+
     echo -e "${YELLOW}Mise à jour des paquets système (apt)...${NC}"
-    sudo apt update && sudo apt upgrade -y
-    echo -e "${GREEN}✅ Mise à jour APT terminée.${NC}"
+    if sudo apt update; then
+        echo -e "${GREEN}✅ apt update terminé.${NC}"
+        if sudo apt upgrade -y; then
+            echo -e "${GREEN}✅ apt upgrade terminé.${NC}"
+        else
+            echo -e "${RED}❌ Échec de 'sudo apt upgrade -y'. Veuillez vérifier les erreurs ci-dessus.${NC}"
+        fi
+    else
+        echo -e "${RED}❌ Échec de 'sudo apt update'. Veuillez vérifier votre connexion internet ou les sources APT.${NC}"
+    fi
     echo ""
 
     echo -e "${YELLOW}Mise à jour des outils clonés (git)...${NC}"
     local tools_dir="$SCRIPT_DIR/../tools"
+    local git_update_failed=false
     for tool_dir in "$tools_dir"/*/; do
         if [ -d "$tool_dir/.git" ]; then
             local tool_name
             tool_name=$(basename "$tool_dir")
             echo -e "${CYAN}Mise à jour de $tool_name...${NC}"
             (cd "$tool_dir" && git pull)
+            if [ $? -ne 0 ]; then
+                echo -e "${RED}❌ Échec de la mise à jour de $tool_name. Veuillez vérifier manuellement.${NC}"
+                git_update_failed=true
+            fi
             echo ""
         fi
     done
-    echo -e "${GREEN}✅ Mise à jour des outils Git terminée.${NC}"
 
+    if [ "$git_update_failed" = true ]; then
+        echo -e "${RED}❌ Certaines mises à jour d'outils Git ont échoué.${NC}"
+    else
+        echo -e "${GREEN}✅ Mise à jour des outils Git terminée.${NC}"
+    fi
+    sleep 2
 }
 
 system_info() {
