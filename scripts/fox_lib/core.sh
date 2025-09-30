@@ -312,31 +312,41 @@ select_file_target() {
 
 # --- INSTALLATEUR AU PREMIER LANCEMENT ---
 auto_install_tools() {
-    echo -e "${YELLOW}🔧 Vrification des outils essentiels...${NC}"
+    echo -e "${YELLOW}🔧 Vérification des outils essentiels...${NC}"
     # Liste des outils critiques pour le fonctionnement de base
     local tools_to_check=(nmap gobuster nikto sqlmap john hashcat hydra aircrack-ng tshark)
-    local all_installed=true
+    local missing_tools=()
 
     for tool in "${tools_to_check[@]}"; do
         if ! check_tool "$tool"; then
             echo -e "${RED}❌ Outil manquant: ${tool}${NC}"
-            all_installed=false
+            missing_tools+=("$tool")
         else
-            echo -e "${GREEN}✅ Outil trouv: ${tool}${NC}"
+            echo -e "${GREEN}✅ Outil trouvé: ${tool}${NC}"
         fi
     done
 
-    if [[ "$all_installed" == "false" ]]; then
+    if [ ${#missing_tools[@]} -gt 0 ]; then
         echo -e "\n${RED}Certains outils essentiels sont manquants.${NC}"
-        echo -e "${YELLOW}Veuillez les installer avec 'sudo apt install <nom_outil>'${NC}"
-        press_enter_to_continue
+        read -r -p "Voulez-vous les installer maintenant? (y/n): " install_choice
+        if [[ "$install_choice" =~ ^[Yy]$ ]]; then
+            echo -e "${BLUE}🔧 Mise à jour des paquets et installation des outils manquants...${NC}"
+            sudo apt update
+            for tool in "${missing_tools[@]}"; do
+                echo -e "${BLUE}Installation de ${tool}...${NC}"
+                sudo apt install -y "$tool"
+            done
+            echo -e "${GREEN}✅ Installation terminée.${NC}"
+        else
+            echo -e "${YELLOW}Installation annulée. Certaines fonctionnalités pourraient ne pas être disponibles.${NC}"
+        fi
     else
-        echo -e "\n${GREEN}✅ Tous les outils essentiels sont prsents.${NC}"
+        echo -e "\n${GREEN}✅ Tous les outils essentiels sont présents.${NC}"
     fi
 
-    # Crer le fichier pour ne pas re-vrifier au prochain lancement
+    # Créer le fichier pour ne pas re-vérifier au prochain lancement
     touch "$HOME/.pihack_tools_checked"
-    echo -e "\n${GREEN}Vrification termine. Le script va maintenant lancer le menu principal...${NC}"
+    echo -e "\n${GREEN}Vérification terminée. Le script va maintenant lancer le menu principal...${NC}"
     sleep 3
     main_menu
 }
